@@ -6,9 +6,9 @@ public class Node extends JButton implements ActionListener{
     Node parent;
     int col;
     int row;
-    int gCost;
-    int hCost;
-    int fCost;
+    double gCost;
+    double hCost;
+    double fCost;
 
     boolean start;
     boolean goal;

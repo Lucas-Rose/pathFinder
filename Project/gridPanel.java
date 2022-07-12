@@ -80,7 +80,7 @@ public class gridPanel extends JPanel{
         node.hCost = xDist + yDist;
 
         //Get F Cost (The Total Cost)
-        node.fCost = node.gCost + node.hCost;
+        node.fCost = Math.sqrt((node.gCost*node.gCost)+(node.hCost*node.hCost));
 
 
         //Display costs
@@ -114,17 +114,17 @@ public class gridPanel extends JPanel{
             }
 
             int bestNodeIndex = 0;
-            int bestNodefCost = 999;
+            double bestNodeHCost = 999;
             for(int i = 0; i < openList.size(); i++){
-                if(openList.get(i).fCost < bestNodefCost){
+                if(openList.get(i).hCost < bestNodeHCost){
                     bestNodeIndex = i;
-                    bestNodefCost = openList.get(i).fCost;
+                    bestNodeHCost = openList.get(bestNodeIndex).hCost;
                 }
-                else if(openList.get(i).fCost == bestNodefCost){
+                /*else if(openList.get(i).fCost == bestNodefCost){
                     if(openList.get(i).gCost < openList.get(bestNodeIndex).gCost){
                         bestNodeIndex = i;
                     }
-                }
+                }*/
             }
             currentNode = openList.get(bestNodeIndex);
             if(currentNode == goalNode){
