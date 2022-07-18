@@ -4,9 +4,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class gridPanel extends JPanel{
-    final int maxCol = 20;
-    final int maxRow = 20;
-    final int nodeSize = 50;
+    final int maxCol = 50;
+    final int maxRow = 50;
+    final int nodeSize = 15;
     final int screenWidth = nodeSize * maxCol;
     final int screenHeight = nodeSize * maxRow;
     
@@ -32,16 +32,16 @@ public class gridPanel extends JPanel{
                 this.add(node[i][j]);
             }
         }
-        setStartNode(19, 0);
-        setGoalNode(0, 19);
+        setStartNode(49, 0);
+        setGoalNode(0, 49);
     //Set Random Obstacles
-        for(int i = 0; i < 100; i ++){
-            int col = (int)(Math.random()*19);
-            int row = (int)(Math.random()*19);
-            if(col == 0 && row == 19){
+        for(int i = 0; i < 500; i ++){
+            int col = (int)(Math.random()*50);
+            int row = (int)(Math.random()*50);
+            if(col == 0 && row == 49){
                 continue;
             }
-            if(col == 19 && row == 0){
+            if(col == 49 && row == 0){
                 continue;
             }
             setSolidNode(col, row);
@@ -80,7 +80,7 @@ public class gridPanel extends JPanel{
         node.hCost = xDist + yDist;
 
         //Get F Cost (The Total Cost)
-        node.fCost = Math.sqrt((node.gCost*node.gCost)+(node.hCost*node.hCost));
+        node.fCost = node.gCost+node.hCost;
 
 
         //Display costs
@@ -88,7 +88,7 @@ public class gridPanel extends JPanel{
             //node.setText("<html>F:" + node.fCost + "<br>G:" + node.gCost+"</html>"); 
         }
     }
-    public void search(){
+    public void slowSearch(){
         if(goalReached == false){
             int col = currentNode.col;
             int row = currentNode.row;
@@ -114,23 +114,83 @@ public class gridPanel extends JPanel{
             }
 
             int bestNodeIndex = 0;
-            double bestNodeHCost = 999;
+            double bestNodeCost = 999;
             for(int i = 0; i < openList.size(); i++){
-                if(openList.get(i).hCost < bestNodeHCost){
+                //This uses Dijkstra's algorithm
+                /*if(openList.get(i).fCost < bestNodeCost){
                     bestNodeIndex = i;
-                    bestNodeHCost = openList.get(bestNodeIndex).hCost;
+                    bestNodeCost = openList.get(bestNodeIndex).fCost;
                 }
-                /*else if(openList.get(i).fCost == bestNodefCost){
+                else if(openList.get(i).fCost == bestNodeCost){
                     if(openList.get(i).gCost < openList.get(bestNodeIndex).gCost){
                         bestNodeIndex = i;
                     }
                 }*/
+                
+                // This uses Greedy Best-First Search
+                if(openList.get(i).hCost < bestNodeCost){
+                    bestNodeIndex = i;
+                    bestNodeCost = openList.get(bestNodeIndex).hCost;
+                } 
+                
             }
             currentNode = openList.get(bestNodeIndex);
             if(currentNode == goalNode){
                 goalReached = true;
                 trackPath();
-                System.out.println("Goal Found, retracing");
+            }
+        }
+    }
+    public void search(){
+        while(goalReached == false){
+            int col = currentNode.col;
+            int row = currentNode.row;
+            checkedList.add(currentNode);
+            currentNode.setAsChecked();
+            openList.remove(currentNode);
+
+            //open top node
+            if(row-1 >= 0){
+                openNode(node[col][row-1]);
+            } 
+            //open left node
+            if(col -1 >=0){
+                openNode(node[col-1][row]);
+            }
+            //open bottom node
+            if(row+1 < maxRow){
+                openNode(node[col][row+1]);
+            }
+            //open right node
+            if(col+1 < maxCol){
+                openNode(node[col+1][row]);
+            }
+
+            int bestNodeIndex = 0;
+            double bestNodeCost = 999;
+            for(int i = 0; i < openList.size(); i++){
+                //This uses Dijkstra's algorithm
+                /*if(openList.get(i).fCost < bestNodeCost){
+                    bestNodeIndex = i;
+                    bestNodeCost = openList.get(bestNodeIndex).fCost;
+                }
+                else if(openList.get(i).fCost == bestNodeCost){
+                    if(openList.get(i).gCost < openList.get(bestNodeIndex).gCost){
+                        bestNodeIndex = i;
+                    }
+                }*/
+                
+                // This uses Greedy Best-First Search
+                if(openList.get(i).hCost < bestNodeCost){
+                    bestNodeIndex = i;
+                    bestNodeCost = openList.get(bestNodeIndex).hCost;
+                } 
+                
+            }
+            currentNode = openList.get(bestNodeIndex);
+            if(currentNode == goalNode){
+                goalReached = true;
+                trackPath();
             }
         }
     }

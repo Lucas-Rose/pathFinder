@@ -21,7 +21,7 @@ public class Node extends JButton implements ActionListener{
         this.col = col;
         this.row = row;
 
-        setBackground(Color.darkGray);
+        setBackground(Color.lightGray);
         setForeground(Color.white);
         addActionListener(this);
     }
@@ -39,6 +39,7 @@ public class Node extends JButton implements ActionListener{
     }
     public void setAsOpen(){
         open = true;
+        setBackground(Color.darkGray);
     }
     public void setAsChecked(){
         if(start == false && goal == false){

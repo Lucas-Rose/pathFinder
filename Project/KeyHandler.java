@@ -16,7 +16,9 @@ public class KeyHandler implements KeyListener{
         int code = e.getKeyCode();
         if(code == KeyEvent.VK_ENTER){
             gp.search();
-            System.out.println("Key Pressed");
+        }
+        if(code == KeyEvent.VK_SPACE){
+            gp.slowSearch();
         }
     }
     public void keyReleased(KeyEvent e) {
